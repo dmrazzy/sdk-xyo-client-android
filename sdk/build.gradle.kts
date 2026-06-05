@@ -2,7 +2,6 @@ import com.google.protobuf.gradle.proto
 
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.android.junit5)
     alias(libs.plugins.protobuf)

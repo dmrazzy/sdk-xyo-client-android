@@ -97,7 +97,7 @@ open class QuantAccount private constructor (
             val deterministicRandom = object : SecureRandom() {
                 private var bytesProvided = 0
                 override fun nextBytes(bytes: ByteArray) {
-                    val toCopy = Math.min(bytes.size, seed.size - bytesProvided)
+                    val toCopy = minOf(bytes.size, seed.size - bytesProvided)
                     if (toCopy > 0) {
                         System.arraycopy(seed, bytesProvided, bytes, 0, toCopy)
                         bytesProvided += toCopy
