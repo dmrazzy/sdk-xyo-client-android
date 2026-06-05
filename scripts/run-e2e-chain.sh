@@ -7,14 +7,14 @@
 #
 # Env overrides:
 #   XL1_E2E_PORT         - API port for the CLI chain (default 18081)
-#   XL1_CLI_VERSION      - npm version of @xyo-network/xl1-cli (default 1.20.24)
+#   XL1_CLI_VERSION      - npm version of @xyo-network/xl1-cli (default 1.20.28)
 #   XL1_E2E_STARTUP_SECS - startup timeout in seconds (default 240)
 
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PORT="${XL1_E2E_PORT:-18081}"
-XL1_CLI_VERSION="${XL1_CLI_VERSION:-1.20.24}"
+XL1_CLI_VERSION="${XL1_CLI_VERSION:-1.20.28}"
 STARTUP_SECS="${XL1_E2E_STARTUP_SECS:-240}"
 CHAIN_DIR="$(mktemp -d -t xl1-cli-e2e.XXXXXX)"
 SERVER_LOG="$(mktemp -t xl1-cli-e2e.XXXXXX.log)"

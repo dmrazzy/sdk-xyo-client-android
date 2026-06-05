@@ -20,7 +20,7 @@ open class BoundWitnessBuilder {
 
     @OptIn(ExperimentalStdlibApi::class)
     val addresses: List<String>
-        get() = _signers.map { witness -> witness.address.toHexString() }
+        get() = _signers.map { witness -> witness.addressString }
 
     open fun signers(signers: List<Account>): BoundWitnessBuilder {
         for (signer in signers) { signer(signer) }

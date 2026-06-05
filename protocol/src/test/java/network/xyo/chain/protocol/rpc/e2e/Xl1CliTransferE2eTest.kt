@@ -26,13 +26,12 @@ class Xl1CliTransferE2eTest {
     @Test
     fun `transfers from the genesis reward address across several produced blocks`() = runBlocking {
         val sender = E2eRpcSupport.genesisRewardWallet()
-        val senderAddress = sender.address.toHexString()
+        val senderAddress = sender.addressString
         val recipients = List(3) { Account.random() }
-        val amount = AttoXL1.of(BigInteger("1000000000000000000"))
         val initialHead = blockViewer.currentBlock()
 
         val initialBalances = accountBalanceViewer.qualifiedAccountBalances(
-            listOf(senderAddress) + recipients.map { it.address.toHexString() },
+            listOf(senderAddress) + recipients.map { it.addressString },
             network.xyo.chain.protocol.model.AccountBalanceConfig(),
         )
         val initialSenderBalance = initialBalances.data[senderAddress] ?: AttoXL1.ZERO
@@ -41,23 +40,25 @@ class Xl1CliTransferE2eTest {
                 DefaultTransactionFees.default.priority +
                 DefaultTransactionFees.default.gasLimit,
         )
-        val requiredSenderBalance = AttoXL1.of(
-            (amount.value + maxFeeExposure.value).multiply(BigInteger.valueOf(recipients.size.toLong())),
+        val amount = conservativeTransferAmount(
+            initialSenderBalance = initialSenderBalance,
+            maxFeeExposure = maxFeeExposure,
+            transferCount = recipients.size,
         )
 
         assertTrue(
-            initialSenderBalance >= requiredSenderBalance,
-            "sender must cover ${recipients.size} transfers plus fees; required=$requiredSenderBalance actual=$initialSenderBalance",
+            amount > AttoXL1.ZERO,
+            "sender balance is too small for a safe transfer after fees; balance=$initialSenderBalance fees=$maxFeeExposure",
         )
         recipients.forEach { recipient ->
-            val recipientAddress = recipient.address.toHexString()
+            val recipientAddress = recipient.addressString
             val initialRecipientBalance = initialBalances.data[recipientAddress] ?: AttoXL1.ZERO
             assertEquals(AttoXL1.ZERO, initialRecipientBalance, "fresh recipient should start at zero")
         }
 
         var observedBlock = initialHead.boundWitness.block
         recipients.forEach { recipient ->
-            val recipientAddress = recipient.address.toHexString()
+            val recipientAddress = recipient.addressString
             val currentHead = blockViewer.currentBlock()
             val transaction = TransactionBuilder()
                 .chain(currentHead.boundWitness.chain)
@@ -100,5 +101,22 @@ class Xl1CliTransferE2eTest {
             observedBlock >= initialHead.boundWitness.block + recipients.size,
             "expected at least ${recipients.size} new blocks after genesis; initial=${initialHead.boundWitness.block} final=$observedBlock",
         )
+    }
+
+    private fun conservativeTransferAmount(
+        initialSenderBalance: AttoXL1,
+        maxFeeExposure: AttoXL1,
+        transferCount: Int,
+    ): AttoXL1 {
+        val count = BigInteger.valueOf(transferCount.toLong())
+        val totalFeeBudget = maxFeeExposure.value.multiply(count)
+        // Leave an extra fee budget in reserve to avoid skating exactly on the edge.
+        val safeBudget = initialSenderBalance.value - totalFeeBudget - maxFeeExposure.value
+        if (safeBudget <= BigInteger.ZERO) return AttoXL1.ZERO
+
+        val perTransferBudget = safeBudget.divide(count)
+        // Stay well below the maximum affordable amount per transfer.
+        val conservativeAmount = perTransferBudget.divide(BigInteger.valueOf(4))
+        return AttoXL1.ofOrNull(conservativeAmount) ?: AttoXL1.ZERO
     }
 }

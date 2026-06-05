@@ -8,3 +8,8 @@ fun hexStringToByteArray(hex: String): ByteArray {
         hex.substring(index, index + 2).toInt(16).toByte()
     }
 }
+
+@OptIn(ExperimentalStdlibApi::class)
+fun byteArrayToHexString(bytes: ByteArray): String {
+    return bytes.toHexString()
+}

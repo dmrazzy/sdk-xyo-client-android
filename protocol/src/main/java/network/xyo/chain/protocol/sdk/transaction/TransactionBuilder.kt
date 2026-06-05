@@ -60,14 +60,14 @@ class TransactionBuilder {
         val expBlock = requireNotNull(exp) { "exp (expiration block) must be set" }
 
         val from = fromAddress
-            ?: signers.firstOrNull()?.address?.toHexString()
+            ?: signers.firstOrNull()?.addressString
             ?: error("From address or at least one signer must be provided")
 
         val payloadHashes = payloads.map { payload -> payload.hash().toHexString() }
         val autoScript = payloadHashes.map { payloadHash -> "elevate|$payloadHash" }
         val transactionScript = (scripts + autoScript).distinct().ifEmpty { null }
         val timestamp = System.currentTimeMillis()
-        val addresses = signers.map { signer -> signer.address.toHexString() }
+        val addresses = signers.map { signer -> signer.addressString }
         val previousHashes = signers.map { signer -> signer.previousHash?.toHexString() }
         val normalizedFees = txFees.toHex().normalized()
 

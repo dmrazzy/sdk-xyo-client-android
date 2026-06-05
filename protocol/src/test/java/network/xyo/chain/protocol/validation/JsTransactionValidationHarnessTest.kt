@@ -24,8 +24,8 @@ class JsTransactionValidationHarnessTest {
 
         val signer = Account.random()
         val recipient = Account.random()
-        val senderAddress = signer.address.toHexString()
-        val recipientAddress = recipient.address.toHexString()
+        val senderAddress = signer.addressString
+        val recipientAddress = recipient.addressString
 
         val transaction = TransactionBuilder()
             .chain("c5fe2e6f6841cbab12d8c0618be2df8c6156cc44")
