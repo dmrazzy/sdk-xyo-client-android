@@ -1,6 +1,6 @@
 val majorVersion by extra(3)
 val minorVersion by extra(1)
-val patchVersion by extra(16)
+val patchVersion by extra(17)
 
 plugins {
     alias(libs.plugins.android.library) apply false
