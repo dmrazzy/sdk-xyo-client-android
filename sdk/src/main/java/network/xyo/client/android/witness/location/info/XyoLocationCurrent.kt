@@ -81,14 +81,13 @@ class XyoLocationCurrent {
             )
         }
 
-        private fun handleIsMock(location: Location): Boolean? {
+        private fun handleIsMock(location: Location): Boolean {
             // Conditionally figure out if using mocked location
-           return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 location.isMock
-            } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-                location.isFromMockProvider
             } else {
-                null
+                @Suppress("DEPRECATION")
+                location.isFromMockProvider
             }
         }
     }
