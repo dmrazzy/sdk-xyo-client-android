@@ -29,7 +29,7 @@ Instrumentation tests require a connected device/emulator:
 
 ## Build Configuration
 
-- **Gradle**: 8.9.3 (use `./gradlew` wrapper)
+- **Gradle**: 9.5.1 (use `./gradlew` wrapper)
 - **Kotlin**: 2.3.20, JVM target 17
 - **Android**: compileSdk 36, minSdk 23, targetSdk 36
 - **Dependency versions**: Centralized in `gradle/libs.versions.toml`
@@ -46,7 +46,7 @@ Instrumentation tests require a connected device/emulator:
 | HD Wallets | hdwallet (Figure tech) |
 | Big numbers | Kotlin BigNum |
 | Protobuf storage | protobuf-javalite (lite runtime) |
-| Async | Kotlin Coroutines 1.10.2 |
+| Async | Kotlin Coroutines 1.11.0 |
 | Testing | JUnit 5 (Jupiter) with mannodermaus Android adapter |
 
 ## Architecture

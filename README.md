@@ -52,18 +52,14 @@ See the [LICENSE](LICENSE) file for license details
 
 ## Credits
 
-Made with 🔥 and ❄️ by [XYO](https://xyo.network)
-
-[logo]: https://cdn.xy.company/img/brand/XYO_full_colored.png
+[Made with 🔥 and ❄️ by XYO Foundation](https://xyo.network)
 
 [jitpack-badge]: https://jitpack.io/v/xyoraclenetwork/sdk-xyo-client-android.svg
 [jitpack-link]: https://jitpack.io/#xyoraclenetwork/sdk-xyo-client-android
-
 [codacy-badge]: https://app.codacy.com/project/badge/Grade/e5647b5338044a958e18c0fe91b4ed4f
 [codacy-link]: https://www.codacy.com/gh/XYOracleNetwork/sdk-xyo-client-swift/dashboard?utm_source=github.com&utm_medium=referral&utm_content=XYOracleNetwork/sdk-xyo-client-android&utm_campaign=Badge_Grade
-
 [codeclimate-badge]: https://api.codeclimate.com/v1/badges/127abaccfe85048dcf38/maintainability
 [codeclimate-link]: https://codeclimate.com/github/XYOracleNetwork/sdk-xyo-client-android/maintainability
-
 [snyk-badge]: https://snyk.io/test/github/XYOracleNetwork/sdk-xyo-client-android/badge.svg
 [snyk-link]: https://snyk.io/test/github/XYOracleNetwork/sdk-xyo-client-android
+[logo]: https://cdn.xy.company/img/brand/XYO_full_colored.png

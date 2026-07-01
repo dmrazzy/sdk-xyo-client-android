@@ -7,14 +7,14 @@
 #
 # Env overrides:
 #   XL1_E2E_PORT         - API port for the CLI chain (default 18081)
-#   XL1_CLI_VERSION      - npm version of @xyo-network/xl1-cli (default 1.20.28)
+#   XL1_CLI_VERSION      - npm version of @xyo-network/xl1-cli (default 3.0.1)
 #   XL1_E2E_STARTUP_SECS - startup timeout in seconds (default 240)
 
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PORT="${XL1_E2E_PORT:-18081}"
-XL1_CLI_VERSION="${XL1_CLI_VERSION:-1.20.28}"
+XL1_CLI_VERSION="${XL1_CLI_VERSION:-3.0.1}"
 STARTUP_SECS="${XL1_E2E_STARTUP_SECS:-240}"
 CHAIN_DIR="$(mktemp -d -t xl1-cli-e2e.XXXXXX)"
 SERVER_LOG="$(mktemp -t xl1-cli-e2e.XXXXXX.log)"
@@ -42,10 +42,34 @@ echo "starting XL1 CLI ${XL1_CLI_VERSION} on port ${PORT}"
 
 (
   cd "$CHAIN_DIR"
-  export XL1_API__PORT="${PORT}"
-  export XL1_LOG_LEVEL="warn"
+  cat <<EOF > xl1-config.json
+{
+  "xl1": {
+    "log": {
+      "logLevel": "warn"
+    },
+    "actors": [
+      {
+        "name": "api",
+        "host": "localhost",
+        "port": ${PORT}
+      },
+      {
+        "name": "producer",
+        "blockProductionCheckInterval": 500,
+        "heartbeatInterval": 5000
+      },
+      {
+        "name": "finalizer",
+        "finalizationCheckInterval": 200,
+        "minCandidates": 1
+      }
+    ]
+  }
+}
+EOF
   npm exec --yes --package="@xyo-network/xl1-cli@${XL1_CLI_VERSION}" -- \
-    xl1 start
+    xl1 start --config xl1-config.json
 ) >"$SERVER_LOG" 2>&1 &
 SERVER_PID=$!
 
@@ -54,7 +78,7 @@ rpc_ready() {
   /usr/bin/curl -sS \
     -H 'Content-Type: application/json' \
     --data '{"jsonrpc":"2.0","id":1,"method":"blockViewer_currentBlock","params":[]}' \
-    "http://127.0.0.1:${port}/rpc" 2>/dev/null | rg -q '"result"'
+    "http://127.0.0.1:${port}/rpc" 2>/dev/null | grep -q '"result"'
 }
 
 for _ in $(seq 1 $((STARTUP_SECS * 10))); do

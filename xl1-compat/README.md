@@ -1,3 +1,5 @@
+[![logo][]](https://xyo.network)
+
 # xl1-compat
 
 JS-side compatibility harness for the Kotlin SDK. Two responsibilities:
@@ -31,3 +33,9 @@ checked for compatibility before the new file is committed.
 
 When bumping Kotlin SDK compatibility to a newer JS release, bump these
 versions, regenerate, and expect vector-diff review.
+
+## Credits
+
+[Made with 🔥 and ❄️ by XYO Foundation](https://xyo.network)
+
+[logo]: https://cdn.xy.company/img/brand/XYO_full_colored.png

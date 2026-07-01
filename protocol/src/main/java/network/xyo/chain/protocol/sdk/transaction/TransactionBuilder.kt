@@ -66,7 +66,6 @@ class TransactionBuilder {
         val payloadHashes = payloads.map { payload -> payload.hash().toHexString() }
         val autoScript = payloadHashes.map { payloadHash -> "elevate|$payloadHash" }
         val transactionScript = (scripts + autoScript).distinct().ifEmpty { null }
-        val timestamp = System.currentTimeMillis()
         val addresses = signers.map { signer -> signer.addressString }
         val previousHashes = signers.map { signer -> signer.previousHash?.toHexString() }
         val normalizedFees = txFees.toHex().normalized()
@@ -82,7 +81,7 @@ class TransactionBuilder {
             payload_hashes = payloadHashes,
             payload_schemas = payloads.map { payload -> payload.schema },
             previous_hashes = previousHashes,
-            timestamp = timestamp,
+            timestamp = null,
         )
 
         val dataHash = JsonSerializable.sha256(signable, JsonSerializable.Companion.MetaExclusion.ALL_META)
@@ -99,7 +98,7 @@ class TransactionBuilder {
             payload_hashes = payloadHashes,
             payload_schemas = payloads.map { payload -> payload.schema },
             previous_hashes = previousHashes,
-            timestamp = timestamp,
+            timestamp = null,
             signatures = signatures,
         )
 
